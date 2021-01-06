@@ -1,4 +1,4 @@
-﻿namespace ShareApp
+﻿namespace Ian.ShareApp
 {
     /// <summary>An expense in the ShareApp</summary>
     public class Expense

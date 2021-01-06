@@ -1,4 +1,4 @@
-﻿namespace ShareApp
+﻿namespace Ian.ShareApp
 {
     /// <summary>A user of the ShareApp</summary>
     public class User

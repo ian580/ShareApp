@@ -1,4 +1,4 @@
-﻿namespace ShareApp
+﻿namespace Ian.ShareApp
 {
     /// <summary>Interface for application for sharing expenses</summary>
     public interface IShareApp
