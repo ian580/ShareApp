@@ -15,6 +15,9 @@ namespace Ian.ShareApp
 
         public Expense(string description, decimal amount, User payedBy)
         {
+            if (amount < 0)
+                throw new ArgumentException("Amount must be a positive amount");
+
             Description = description;
             Amount = amount;
             PayedBy = payedBy;

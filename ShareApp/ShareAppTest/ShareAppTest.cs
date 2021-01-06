@@ -23,6 +23,29 @@ namespace Ian.ShareAppTest
         }
 
         [Fact]
+        public void ExpensesCanBeAdded()
+        {
+            // Arrange
+            var user = new User("user");
+            var app = new ShareApplication(new List<User> { user });
+
+            // Act
+            var expense = new Expense("hotel", 100, user);
+            app.AddExpense(expense);
+
+            // Assert
+            app.GetExpenses().Should().BeEquivalentTo(new List<Expense> { expense });
+        }
+
+        [Fact]
+        public void NegativeExpensesCannotBeCreated()
+        {
+            Action constructExpense = () => new Expense("expense", -100, new User(""));
+
+            constructExpense.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
         public void IntegrationTest()
         {
             // Arrange
