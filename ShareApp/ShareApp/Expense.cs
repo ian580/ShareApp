@@ -11,8 +11,6 @@ namespace Ian.ShareApp
 
         public User PayedBy { get; }
 
-        public DateTime ExpenseTime { get; }
-
         public Expense(string description, decimal amount, User payedBy)
         {
             if (amount < 0)
@@ -21,7 +19,6 @@ namespace Ian.ShareApp
             Description = description;
             Amount = amount;
             PayedBy = payedBy;
-            ExpenseTime = DateTime.Now;
         }
     }
 }

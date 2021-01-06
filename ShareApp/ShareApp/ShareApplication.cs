@@ -41,7 +41,23 @@ namespace Ian.ShareApp
 
         public Payment[] GetPaymentsToSettle()
         {
-            throw new System.NotImplementedException();
+            // Payment from users who owe(negative balance) to user who are owed(positive balance) in amount of balance / number of people owed
+            var peopleOwed = _users.Where(user => GetUsersBalance(user) > 0);
+
+            var peopleWhoOwe = _users.Except(peopleOwed);
+
+            var paymentsToSettle = new List<Payment>();
+
+            // TODO: Balance is probably calculated more times than needed here and could be refactored
+            foreach (var payer in peopleWhoOwe)
+            {
+                foreach (var payee in peopleOwed)
+                {
+                    paymentsToSettle.Add(new Payment(payer, payee, -GetUsersBalance(payer) / peopleOwed.Count()));
+                }
+            }
+
+            return paymentsToSettle.ToArray();
         }
 
         public decimal GetUsersBalance(User user)

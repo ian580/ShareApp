@@ -72,23 +72,33 @@ namespace Ian.ShareAppTest
 
             var shareApp = new ShareApplication(new List<User> { john, peter, mary });
 
-            // Act
+            // Act - add expenses
             shareApp.AddExpense(new Expense("Hotel", 500, john));
             shareApp.AddExpense(new Expense("Food", 150, mary));
             shareApp.AddExpense(new Expense("Sightseeing", 100, peter));
 
-            // Assert
+            // Assert - total expenses
             shareApp.GetExpenseTotal().Should().Be(750);
             
+            // Assert - users' balances
             shareApp.GetUsersBalance(john).Should().Be(250);
             shareApp.GetUsersBalance(mary).Should().Be(-100);
             shareApp.GetUsersBalance(peter).Should().Be(-150);
 
-            // Act
-            shareApp.MakePayment(new Payment(mary, john, 100));
-            shareApp.MakePayment(new Payment(peter, john, 150));
+            var paymentMaryToJohn = new Payment(mary, john, 100);
+            var paymentPeterToJohn = new Payment(peter, john, 150);
 
-            // Assert
+            // Act - get payments to settle
+            var paymentsToSettle = shareApp.GetPaymentsToSettle();
+
+            // Assert - correct payments to settle
+            paymentsToSettle.Should().BeEquivalentTo(new List<Payment> { paymentMaryToJohn, paymentPeterToJohn });
+
+            // Act - make payments
+            shareApp.MakePayment(paymentMaryToJohn);
+            shareApp.MakePayment(paymentPeterToJohn);
+
+            // Assert - all settled
             shareApp.GetUsersBalance(john).Should().Be(0);
             shareApp.GetUsersBalance(mary).Should().Be(0);
             shareApp.GetUsersBalance(peter).Should().Be(0);

@@ -11,15 +11,11 @@ namespace Ian.ShareApp
 
         public decimal Amount { get; }
 
-        public DateTime PaymentTime { get; }
-
         public Payment(User payedBy, User payee, decimal amount)
         {
             PayedBy = payedBy;
             Payee = payee;
             Amount = amount;
-
-            PaymentTime = DateTime.Now;
         }
     }
 }
