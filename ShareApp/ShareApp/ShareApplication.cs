@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Ian.ShareApp
 {
@@ -11,19 +13,25 @@ namespace Ian.ShareApp
 
         public ShareApplication(List<User> users)
         {
-            _users = users;
+            _users = users ?? throw new ArgumentNullException(nameof(users));
+
             _expenses = new List<Expense>();
             _payments = new List<Payment>();
         }
 
         public void AddExpense(Expense expense)
         {
-            throw new System.NotImplementedException();
+            _expenses.Add(expense);
         }
 
         public Expense[] GetExpenses()
         {
-            throw new System.NotImplementedException();
+            return _expenses.ToArray();
+        }
+
+        public decimal GetExpenseTotal()
+        {
+            return _expenses.Select(expense => expense.Amount).Sum();
         }
 
         public Payment[] GetPaymentsToSettle()
@@ -38,7 +46,7 @@ namespace Ian.ShareApp
 
         public void MakePayment(Payment payment)
         {
-            throw new System.NotImplementedException();
+            _payments.Add(payment);
         }
     }
 }
