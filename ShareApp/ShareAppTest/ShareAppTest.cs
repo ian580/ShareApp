@@ -66,6 +66,15 @@ namespace Ian.ShareAppTest
             shareApp.GetUsersBalance(john).Should().Be(250);
             shareApp.GetUsersBalance(mary).Should().Be(-100);
             shareApp.GetUsersBalance(peter).Should().Be(-150);
+
+            // Act
+            shareApp.MakePayment(new Payment(mary, john, 100));
+            shareApp.MakePayment(new Payment(peter, john, 150));
+
+            // Assert
+            shareApp.GetUsersBalance(john).Should().Be(0);
+            shareApp.GetUsersBalance(mary).Should().Be(0);
+            shareApp.GetUsersBalance(peter).Should().Be(0);
         }
     }
 }

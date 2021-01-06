@@ -48,14 +48,26 @@ namespace Ian.ShareApp
         {
             var expensesEach = GetExpenseTotal() / _users.Count;
 
-            var expensesPaidAmount = _expenses
+            var expensesPaid = _expenses
                 .Where(expense => expense.PayedBy == user)
                 .Select(expense => expense.Amount)
                 .Sum();
 
-            // TODO: Take into account payments already made
+            var amountPaid = _payments
+                .Where(payment => payment.PayedBy == user)
+                .Select(payment => payment.Amount)
+                .Sum();
 
-            return expensesPaidAmount - expensesEach;
+            var amountReceived = _payments
+                .Where(payment => payment.Payee == user)
+                .Select(payment => payment.Amount)
+                .Sum();
+
+
+            // TODO: Make this read a bit better
+            var expenseBalance = expensesEach - expensesPaid;
+
+            return amountPaid - amountReceived - expenseBalance;
         }
     }
 }
