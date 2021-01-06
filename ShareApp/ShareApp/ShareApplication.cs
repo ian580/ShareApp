@@ -34,6 +34,11 @@ namespace Ian.ShareApp
             return _expenses.Select(expense => expense.Amount).Sum();
         }
 
+        public void MakePayment(Payment payment)
+        {
+            _payments.Add(payment);
+        }
+
         public Payment[] GetPaymentsToSettle()
         {
             throw new System.NotImplementedException();
@@ -41,12 +46,16 @@ namespace Ian.ShareApp
 
         public decimal GetUsersBalance(User user)
         {
-            throw new System.NotImplementedException();
-        }
+            var expensesEach = GetExpenseTotal() / _users.Count;
 
-        public void MakePayment(Payment payment)
-        {
-            _payments.Add(payment);
+            var expensesPaidAmount = _expenses
+                .Where(expense => expense.PayedBy == user)
+                .Select(expense => expense.Amount)
+                .Sum();
+
+            // TODO: Take into account payments already made
+
+            return expensesPaidAmount - expensesEach;
         }
     }
 }
