@@ -46,6 +46,23 @@ namespace Ian.ShareAppTest
         }
 
         [Fact]
+        public void PaymentsCanBeMade()
+        {
+            // Arrange
+            var user1 = new User("user");
+            var user2 = new User("user");
+            var app = new ShareApplication(new List<User> { user1, user2 });
+
+            // Act
+            var payment = new Payment(user1, user2, 100);
+            app.MakePayment(payment);
+
+            // Assert
+            app.GetUsersBalance(user1).Should().Be(100);
+            app.GetUsersBalance(user2).Should().Be(-100);
+        }
+
+        [Fact]
         public void IntegrationTest()
         {
             // Arrange

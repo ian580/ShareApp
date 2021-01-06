@@ -63,7 +63,6 @@ namespace Ian.ShareApp
                 .Select(payment => payment.Amount)
                 .Sum();
 
-
             // TODO: Make this read a bit better
             var expenseBalance = expensesEach - expensesPaid;
 
