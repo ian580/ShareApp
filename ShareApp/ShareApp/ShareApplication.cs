@@ -21,6 +21,13 @@ namespace Ian.ShareApp
 
         public void AddExpense(Expense expense)
         {
+            expense.PayedBy.IncreaseBalance(expense.Amount * ((_users.Count - 1.0m) / _users.Count));
+            
+            foreach (var user in _users.Except(new List<User> { expense.PayedBy }))
+            {
+                user.DecreaseBalance(expense.Amount / _users.Count);
+            }
+
             _expenses.Add(expense);
         }
 
@@ -36,24 +43,25 @@ namespace Ian.ShareApp
 
         public void MakePayment(Payment payment)
         {
+            payment.PayedBy.IncreaseBalance(payment.Amount);
+            payment.Payee.DecreaseBalance(payment.Amount);
             _payments.Add(payment);
         }
 
         public Payment[] GetPaymentsToSettle()
         {
             // Payment from users who owe(negative balance) to user who are owed(positive balance) in amount of balance / number of people owed
-            var peopleOwed = _users.Where(user => GetUsersBalance(user) > 0);
+            var peopleOwed = _users.Where(user => user.Balance > 0);
 
             var peopleWhoOwe = _users.Except(peopleOwed);
 
             var paymentsToSettle = new List<Payment>();
 
-            // TODO: Balance is probably calculated more times than needed here and could be refactored
             foreach (var payer in peopleWhoOwe)
             {
                 foreach (var payee in peopleOwed)
                 {
-                    paymentsToSettle.Add(new Payment(payer, payee, -GetUsersBalance(payer) / peopleOwed.Count()));
+                    paymentsToSettle.Add(new Payment(payer, payee, -payer.Balance / peopleOwed.Count()));
                 }
             }
 
@@ -62,27 +70,7 @@ namespace Ian.ShareApp
 
         public decimal GetUsersBalance(User user)
         {
-            var expensesEach = GetExpenseTotal() / _users.Count;
-
-            var expensesPaid = _expenses
-                .Where(expense => expense.PayedBy == user)
-                .Select(expense => expense.Amount)
-                .Sum();
-
-            var amountPaid = _payments
-                .Where(payment => payment.PayedBy == user)
-                .Select(payment => payment.Amount)
-                .Sum();
-
-            var amountReceived = _payments
-                .Where(payment => payment.Payee == user)
-                .Select(payment => payment.Amount)
-                .Sum();
-
-            // TODO: Make this read a bit better
-            var expenseBalance = expensesEach - expensesPaid;
-
-            return amountPaid - amountReceived - expenseBalance;
+            return user.Balance;
         }
     }
 }

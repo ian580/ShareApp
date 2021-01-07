@@ -81,9 +81,9 @@ namespace Ian.ShareAppTest
             shareApp.GetExpenseTotal().Should().Be(750);
             
             // Assert - users' balances
-            shareApp.GetUsersBalance(john).Should().Be(250);
-            shareApp.GetUsersBalance(mary).Should().Be(-100);
-            shareApp.GetUsersBalance(peter).Should().Be(-150);
+            shareApp.GetUsersBalance(john).Should().BeApproximately(250.00m, 0.001m);
+            shareApp.GetUsersBalance(mary).Should().BeApproximately(-100.00m, 0.001m);
+            shareApp.GetUsersBalance(peter).Should().BeApproximately(-150.00m, 0.001m);
 
             var paymentMaryToJohn = new Payment(mary, john, 100);
             var paymentPeterToJohn = new Payment(peter, john, 150);
@@ -99,9 +99,9 @@ namespace Ian.ShareAppTest
             shareApp.MakePayment(paymentPeterToJohn);
 
             // Assert - all settled
-            shareApp.GetUsersBalance(john).Should().Be(0);
-            shareApp.GetUsersBalance(mary).Should().Be(0);
-            shareApp.GetUsersBalance(peter).Should().Be(0);
+            shareApp.GetUsersBalance(john).Should().BeApproximately(0.0m, 0.001m);
+            shareApp.GetUsersBalance(mary).Should().BeApproximately(0.0m, 0.001m);
+            shareApp.GetUsersBalance(peter).Should().BeApproximately(0.0m, 0.001m);
         }
     }
 }
